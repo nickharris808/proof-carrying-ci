@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "proof-carrying-ci: the whole portfolio as one CI check, with SARIF"
+abstract: >-
+  the whole portfolio as one CI check, with SARIF
+authors:
+  - family-names: Harris
+    given-names: Nick
+repository-code: "https://github.com/nickharris808/proof-carrying-ci"
+url: "https://github.com/nickharris808/proof-carrying-ci"
+license: Apache-2.0
+type: software
+keywords:
+  - verification
+  - abstention
+  - reproducibility

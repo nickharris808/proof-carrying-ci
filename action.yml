@@ -1,0 +1,64 @@
+name: 'proof-carrying-ci'
+description: 'Run the verification portfolio over your repo. The aggregate is the weakest leg, never the mean.'
+branding:
+  icon: 'check-circle'
+  color: 'purple'
+
+inputs:
+  path:
+    description: 'Directory to audit'
+    required: false
+    default: '.'
+  fail-on:
+    description: >
+      When to fail the job. `failure` (default) fails only on a check that RAN and FAILED.
+      `unverified` also fails when a check could not be completed. `never` always succeeds and
+      leaves the verdict to the summary and the SARIF upload.
+    required: false
+    default: 'failure'
+  sarif:
+    description: 'Write SARIF here for GitHub code scanning (empty to skip)'
+    required: false
+    default: 'proof-carrying-ci.sarif'
+  summary:
+    description: 'Write the report to the job summary'
+    required: false
+    default: 'true'
+  extras:
+    description: 'Which constituents to install: `all` (default), `core`, or a pip spec'
+    required: false
+    default: 'all'
+
+outputs:
+  verdict:
+    description: 'PASSED, FAILED or UNVERIFIED'
+    value: ${{ steps.audit.outputs.verdict }}
+  weakest:
+    description: 'The constituent that determined the aggregate'
+    value: ${{ steps.audit.outputs.weakest }}
+  exit-code:
+    description: '0 checked and holds, 1 checked and fails, 2 NOT checked'
+    value: ${{ steps.audit.outputs.exit-code }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install the portfolio
+      shell: bash
+      run: |
+        python3 -m pip install --upgrade pip >/dev/null
+        case "${{ inputs.extras }}" in
+          all)  python3 -m pip install "proof-carrying-ci[all] @ git+https://github.com/nickharris808/proof-carrying-ci" ;;
+          core) python3 -m pip install "proof-carrying-ci @ git+https://github.com/nickharris808/proof-carrying-ci" ;;
+          *)    python3 -m pip install ${{ inputs.extras }} ;;
+        esac
+
+    - name: Audit
+      id: audit
+      shell: bash
+      run: |
+        proof-carrying-ci run \
+          --path "${{ inputs.path }}" \
+          --fail-on "${{ inputs.fail-on }}" \
+          --sarif "${{ inputs.sarif }}" \
+          --summary "${{ inputs.summary }}"
