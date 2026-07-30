@@ -23,8 +23,15 @@ under one rule, and write SARIF, a job summary and step outputs.
 
 Or locally:
 
+**Not yet on PyPI.** The command below is the one that works today. It installs from this repository, pinned to a tag.
+
 ```bash
-pip install "proof-carrying-ci[all]"
+pip install "proof-carrying-ci[all] @ git+https://github.com/nickharris808/proof-carrying-ci@v0.1.0"
+```
+
+`pip install proof-carrying-ci[all]` is the intended command once the name is published. **It 404s today**, which is why it is not the first step above. The tag is pinned rather than `@main` so a reader installs the exact code this README documents.
+
+```bash
 proof-carrying-ci run --path .
 proof-carrying-ci selftest
 ```

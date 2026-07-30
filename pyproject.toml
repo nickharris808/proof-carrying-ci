@@ -21,8 +21,12 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-all = ["evidence", "gridlock", "signoff-cert", "honestbench", "proof-to-code-drift", "sf-verify"]
-dev = ["pytest>=7", "evidence", "gridlock"]
+# NOTE: `evidence` and `gridlock` on PyPI are UNRELATED third-party projects. Our
+# distributions are `evidence-runner` and `gridlock-certify` (the import names are
+# unchanged). Naming the bare forms here would pull a stranger's package in as a
+# dependency of ours, where nobody would think to look for it.
+all = ["evidence-runner", "gridlock-certify", "signoff-cert", "honestbench", "proof-to-code-drift", "sf-verify"]
+dev = ["pytest>=7", "evidence-runner", "gridlock-certify"]
 
 [project.scripts]
 proof-carrying-ci = "proof_carrying_ci.cli:main"
